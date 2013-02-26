@@ -1,0 +1,31 @@
+class MYCsv::Parser
+
+rule
+
+file     : record              {result = [ val[0] ]}
+         | record NEWLINE file {result = [ val[0] ] + (val[2] || [])}
+         | END
+record   : record COMMA field  {result = [ val[0] , val[2] ].flatten}
+         | field
+field    : qstring
+         | uqstring            {result = val[0].strip()}
+qstring  : DQ string DQ        {result = val[1].strip()}
+string   : string strpart      {result = val[0] + val[1]}
+         | strpart
+strpart  : ESCAPED_DQ          {result = '"'}
+         | CHAR
+uqstring : uqstring CHAR       {result = val[0] + val[1]}
+         | CHAR
+
+end
+
+---- inner ----
+  def parse(tokens)
+    @tokens = tokens
+    do_parse
+  end
+
+  def next_token
+    @tokens.shift
+  end
+
