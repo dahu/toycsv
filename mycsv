@@ -2,7 +2,6 @@
 
 require './lib/mycsv/scanner'
 require './lib/mycsv/parser'
-require './lib/mycsv/code_generator'
 
 tokens = MYCsv::Scanner.scan(STDIN.read)
 # puts tokens.inspect
